@@ -1,45 +1,50 @@
-{% set name = "<PLEASE ADD PKG NAME>" %}
-{% set version = "<PLEASE ADD PKG VERSION>" %}
+{% set name = "diagnostic" %}
+{% set version = "3.0.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: <sha256>
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name | replace('-', '_') }}-{{ version }}.tar.gz
+  sha256: 5c80d7f77706dca775cc85d7b0492e4e96385dade2103052cf06cf6ab105b855
 
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: True  # [py<38]
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vv
+  skip: true  # [py<310]
 
 requirements:
   host:
     - python
     - pip
+    - flit-core >=3.2,<4
+
   run:
     - python
+    - docutils
+    - markdown-it-py
+    - rich
 
 test:
   imports:
-    - {{ name.replace('-', '.') }}
+    - diagnostic
   requires:
     - pip
   commands:
     - pip check
 
 about:
-  home: <PLEASE ADD HOME URL>
-  summary: <PLEASE ADD SUMMARY>
+  home: https://pypi.org/project/diagnostic/
+  summary: Present errors that contain causes better understand what happened.
   description: |
-    <PLEASE ADD DESCRIPTION>
-  license: <PLEASE ADD LICENSE>
-  license_family: <PLEASE ADD LICENSE_FAMILY>
-  license_file: <PLEASE_ADD_LICENSE_FILE>
-  dev_url: <PLEASE ADD DEV URL>
-  doc_url: <PLEASE ADD DOC URL>
+    diagnostic makes it easier to build command line tools with great error reporting.
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  dev_url: https://github.com/pradyunsg/diagnostic
+  doc_url: https://diagnostic.readthedocs.io
 
 extra:
   recipe-maintainers:
-    - Jrice1317
+    - skupr-anaconda
